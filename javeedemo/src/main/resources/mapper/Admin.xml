@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.javeedemo.mapper.AdminMapper">
+    <select id="list" resultType="com.example.javeedemo.entity.Admin">
+        select * from admin
+    </select>
+    <select id="listByCondition" resultType="com.example.javeedemo.entity.Admin">
+        select * from admin
+            <where>
+                <if test="username != null and username !=''">
+                    username like concat('%',#{ username },'%')
+                </if>
+                <if test="phone != null and phone !=''">
+                    and phone like concat('%',#{ phone },'%')
+                </if>
+                <if test="email != null and email !=''">
+                    and email like concat('%',#{ email },'%')
+                </if>
+            </where>
+        order by id desc
+    </select>
+    <insert id="save">
+        insert into admin(username,password,phone,email)
+        value (#{username},#{password},#{phone},#{email})
+    </insert>
+    <select id="getById" resultType="com.example.javeedemo.entity.Admin">
+        select * from admin where id =#{id}
+    </select>
+    <update id="updateById">
+        update admin set username=#{username},phone=#{phone},email=#{email},updatetime=#{updatetime}
+        where id=#{id}
+    </update>
+    <delete id="deleteById">
+        delete from admin where id=#{id}
+    </delete>
+    <select id="getByUsernameAndPassword" resultType="com.example.javeedemo.entity.Admin">
+        select * from admin where username = #{username} and password = #{password}
+    </select>
+    <select id="getByUsernameAndPassword2" resultType="com.example.javeedemo.entity.User">
+        select * from user where name = #{username} and password = #{password} and (state='正常' or state='申请注销账号中')
+    </select>
+    <update id="updatePassword">
+        update admin set password = #{newPass} where username = #{username}
+    </update>
+</mapper>

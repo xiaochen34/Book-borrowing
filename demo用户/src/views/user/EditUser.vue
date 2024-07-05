@@ -1,0 +1,67 @@
+<template>
+    <div style="width: 80%">
+        <div style="margin-bottom:30px">编辑加用户</div>
+<el-form :inline="true" :model="form"  label-width="100px">
+    <el-form-item label="卡号">
+    <el-input v-model="form.username" disabled ></el-input>
+  </el-form-item>
+  <el-form-item label="姓名">
+    <el-input v-model="form.name" placeholder="请输入姓名" disabled></el-input>
+  </el-form-item>
+       <el-form-item label="密码">
+    <el-input v-model="form.password" placeholder="请输入密码" disabled></el-input>
+  </el-form-item>
+  <el-form-item label="年龄">
+    <el-input v-model="form.age" placeholder="请输入年龄"></el-input>
+  </el-form-item>
+  <el-form-item label="性别">
+    <el-input v-model="form.sex" placeholder="请输入性别"></el-input>
+  </el-form-item>
+  <el-form-item label="联系方式">
+    <el-input v-model="form.phone" placeholder="请输入联系方式"></el-input>
+  </el-form-item>
+   <el-form-item label="地址">
+    <el-input v-model="form.address" placeholder="请输入地址"></el-input>
+  </el-form-item>
+</el-form>
+<div style="text-align:center;margin-top:30px">
+    <el-button type="primary" @click="save" size="medium">编辑</el-button>
+
+</div>
+
+
+    </div>
+
+</template>
+<script>
+import request from "@/untils/request";
+import Cookies from 'js-cookie';
+export default {
+  name: 'EditUser',
+  data(){
+    return{
+         admin:Cookies.get('admin')?JSON.parse(Cookies.get('admin')):{},
+        form:{}
+    }
+  },
+  created(){
+    const id = this.$route.query.id
+    request.get('http://localhost:9000/user/'+this.admin.id).then(res=>{
+        this.form=res.data
+    })
+  },
+  methods:{
+    save(){
+            request.put('http://localhost:9000/user/update',this.form).then(res=>{
+                if(res.code ==='200'){
+                    this.$notify.success('更新成功')
+                }
+                else{
+                    this.$notify.error(res.msg)
+                }
+            })
+            
+    },
+  }
+}
+</script>

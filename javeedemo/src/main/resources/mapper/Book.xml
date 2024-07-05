@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.javeedemo.mapper.BookMapper">
+    <select id="listByCondition" resultType="com.example.javeedemo.entity.Book">
+        select * from book
+        <where>
+            <if test="name != null and name != ''">
+                name like concat('%', #{ name }, '%')
+            </if>
+            <if test="bookNo != null and bookNo != ''">
+                and book_no = #{bookNo}
+            </if>
+            and upload = '已上传'
+        </where>
+        order by id desc
+    </select>
+    <select id="listByCondition2" resultType="com.example.javeedemo.entity.Book">
+        select * from book
+        <where>
+            <if test="name != null and name != ''">
+                name like concat('%', #{ name }, '%')
+            </if>
+            <if test="bookNo != null and bookNo != ''">
+                and book_no = #{bookNo}
+            </if>
+            and (upload = '上传中' or upload = '被驳回')
+        </where>
+        order by id desc
+    </select>
+
+    <insert id="save">
+insert into book(name, description, publish_date, author, publisher, category, book_no, cover, upload)
+values(#{name}, #{description}, #{publishDate}, #{author}, #{publisher}, #{category}, #{bookNo}, #{cover}, '上传中')
+</insert>
+    <insert id="save2">
+insert into book(name, description, publish_date, author, publisher, category, book_no, cover, upload)
+values(#{name}, #{description}, #{publishDate}, #{author}, #{publisher}, #{category}, #{bookNo}, #{cover}, '已上传')
+</insert>
+
+    <update id="updateById">
+update book set name = #{name}, description = #{description}, publish_date = #{publishDate}, author = #{author},
+publisher = #{publisher}, book_no = #{bookNo}, cover = #{cover},
+ updatetime = #{updatetime} where id = #{id}
+</update>
+    <update id="updateUpload">
+        update book set upload = '已上传' where id = #{id}
+    </update>
+    <update id="updateUpload1">
+        update book set upload = '被驳回' where id = #{id}
+    </update>
+
+
+    <update id="updateNumByNo">
+update book set nums = nums + 1 where book_no = #{bookNo}
+</update>
+
+    <delete id="deleteById">
+delete from book where id = #{id}
+</delete>
+
+    <select id="list" resultType="com.example.javeedemo.entity.Book">
+select * from book order by id desc
+</select>
+
+    <select id="getById" resultType="com.example.javeedemo.entity.Book">
+select * from book where id = #{id}
+</select>
+    <select id="getByNo" resultType="com.example.javeedemo.entity.Book">
+select * from book where book_no = #{bookNo}
+</select>
+
+    <update id="update3">
+        update book set statement = #{statement} where id = #{id}
+    </update>
+</mapper>
